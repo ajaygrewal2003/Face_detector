@@ -1,0 +1,29 @@
+import cv2
+
+trained_face_data = cv2.CascadeClassifier('haarcascade_frontalface_default.xml') #front forward face classifier with cascade algorithm
+
+webcam = cv2.VideoCapture(0)
+# must convert to grayscale 
+
+#iterate forever over frames
+while True:
+    succesfull_frame_read, frame = webcam.read() # reads current frame (first is boolean and second is actual frame)
+
+    grayscaled_img = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+    # detect faces
+    face_coordinates= trained_face_data.detectMultiScale(grayscaled_img) # detect all the faces with multifacing (different sizes such as small or big)
+
+    for (x,y,w,h) in face_coordinates:
+        # draws rectangles around faces
+        cv2.rectangle(frame, (x,y), (x+w, y+h), (0, 255, 0),2)
+
+    cv2.imshow('Face Detector App', frame) # only opens for a split second (shows wind temporarily )
+    key=cv2.waitKey(1) # pauses execution (allows for longer viewing of image)
+
+    if key==81 or key==113: # if press q then exit program
+        break
+
+#release the videocapture object
+webcam.release()
+
